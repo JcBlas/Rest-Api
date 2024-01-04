@@ -65,40 +65,44 @@ def create_first_aid_kit():
 # Route to update a first aid kit
 @app.route('/api/first_aid_kits/<int:first_aid_kit_id>', methods=['PUT'])
 def update_first_aid_kit(first_aid_kit_id):
-    cur = mysql.connection.cursor()
-    info = request.get_json()
-    First_Aid_Kit_details = info.get("First_Aid_Kit_details")
-    Location_id = info.get("Location_id")
-    cur.execute(
-        """ UPDATE employees SET 
-        First_Aid_Kit_details = %s, Location_id = %s,
-        WHERE First_Aid_Kit_id = %s """,
-        (First_Aid_Kit_details, Location_id)
-    )
-    mysql.connection.commit()
-    rows_affected = cur.rowcount
-    cur.close()
-    return make_response(
-        jsonify(
-            {"message": f"First aid kit {first_aid_kit_id} updated successfully", "rows_affected": rows_affected}
-        ),
-        200,
-    )
-
+    try:
+        cur = mysql.connection.cursor()
+        info = request.get_json()
+        First_Aid_Kit_details = info.get("First_Aid_Kit_details")
+        Location_id = info.get("Location_id")
+        cur.execute(
+            """ UPDATE first_aid_kit SET 
+            First_Aid_Kit_details = %s, Location_id = %s
+            WHERE First_Aid_Kit_id = %s """,
+            (First_Aid_Kit_details, Location_id, first_aid_kit_id)
+        )
+        mysql.connection.commit()
+        rows_affected = cur.rowcount
+        cur.close()
+        return make_response(
+            jsonify(
+                {"message": f"First aid kit {first_aid_kit_id} updated successfully", "rows_affected": rows_affected}
+            ),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # Route to delete a first aid kit
 @app.route('/api/first_aid_kits/<int:first_aid_kit_id>', methods=['DELETE'])
 def delete_first_aid_kit(first_aid_kit_id):
-    cur = mysql.connection.cursor()
-    cur.execute(""" DELETE FROM employees where First_Aid_Kit_id = %s """, (id,))
-    mysql.connection.commit()
-    rows_affected = cur.rowcount
-    cur.close()
-    return make_response(
-        jsonify(
-            {"message": f"First aid kit {first_aid_kit_id} deleted successfully", "rows_affected": rows_affected}
-        ),
-        200,
-    )
-
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(""" DELETE FROM first_aid_kit where First_Aid_Kit_id = %s """, (first_aid_kit_id,))
+        mysql.connection.commit()
+        rows_affected = cur.rowcount
+        cur.close()
+        return make_response(
+            jsonify(
+                {"message": f"First aid kit {first_aid_kit_id} deleted successfully", "rows_affected": rows_affected}
+            ),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True)
