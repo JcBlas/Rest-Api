@@ -1,5 +1,6 @@
 to run the flask application 
 activate the virtual environtment by typing .\myvenv\Scripts\activate at the terminal
+pip install Flask Flask-MySQLdb
 type python app.py to run the flask
 click the given link 
 /api/first_aid_kits add this to the given link
