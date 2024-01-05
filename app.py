@@ -17,19 +17,12 @@ mysql = MySQL(app)
 @app.route('/api/first_aid_kits', methods=['GET'])
 def get_first_aid_kits():
     try:
-        # Connect to the database
         cur = mysql.connection.cursor()
 
-        # Execute the query to fetch all first aid kits
         cur.execute("SELECT * FROM first_aid_kit")
 
-        # Fetch all results
         result = cur.fetchall()
-
-        # Close the cursor
         cur.close()
-
-        # Return the result in JSON format
         return jsonify(result)
 
     except Exception as e:
